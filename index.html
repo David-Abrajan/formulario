@@ -1,17 +1,83 @@
 <html>
     <head>
+      <title>Formulario</title>
+      <style>
+      body {
+           font-family: Arial, sans-serif;
+           margin: 0;
+           padding: 0;
+           background: url('https://concepto.de/wp-content/uploads/2015/02/futbol-3-e1550784028870.jpg') center center fixed;
+           background-size: cover;
+       }
 
+       form {
+           max-width: 600px;
+           margin: 0 auto;
+           background: rgba(255, 255, 255, 0.8);
+           padding: 20px;
+           border-radius: 8px;
+           box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+       }
+
+       label {
+           display: block;
+           margin-bottom: 8px;
+       }
+
+       input, select {
+           width: 100%;
+           padding: 8px;
+           margin-bottom: 16px;
+           box-sizing: border-box;
+       }
+
+       button {
+           background-color: #4CAF50;
+           color: white;
+           padding: 10px 15px;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+           font-size: 16px;
+       }
+
+       button:hover {
+           background-color: #45a049;
+       }
+
+      h2 {
+          color: white;
+          text-align: center;
+      }
+      </style>
     </head>
     <body>
-        <form id="crud-form">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id = "nombre">
-            <label for="edad">Edad:</label>
-            <input type="number" id = "edad">
-            <button type="button" onclick="crearRegistro()">Crear</button>
-        </form>
+      <h2>Inscripción de un Equipo de Fútbol</h2>
+      <form id="formulario">
+          <label for="nombre_equipo">Nombre del Equipo:</label>
+          <input type="text" id="nombre_equipo" required>
 
+          <label for="nombre_entrenador">Número Total de Jugadores:</label>
+          <input type="number" id="numero_jugadores" required>
 
+          <label for="nombre_entrenador">Nombre del Entrenador:</label>
+          <input type="text" id="nombre_entrenador" required>
+
+          <label for="correo_entrenador">Correo del Entrenador:</label>
+          <input type="email" id="correo_entrenador" required>
+
+          <label for="telefono_contacto">Teléfono de Contacto:</label>
+          <input type="number" id="telefono_contacto" required>
+
+          <label for="categoria_equipo">Categoría del Equipo:</label>
+          <select id="categoria_equipo" name="categoria_equipo" required>
+              <option value="juvenil">Juvenil</option>
+              <option value="adulto">Adulto</option>
+              <option value="femenino">Femenino</option>
+          </select>
+
+          <button type="button" onclick="crearInscripcion()">Enviar Inscripción</button>
+      </form>
         <script type="module">
             // Import the functions you need from the SDKs you need
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
@@ -34,19 +100,25 @@
             const app = initializeApp(firebaseConfig);
             const database = getDatabase(app);
 
-            window.crearRegistro = function () {
-                const nombre = document.getElementById("nombre").value;
-                const edad = document.getElementById("edad").value;
-                console.log(nombre, edad);
+            window.crearInscripcion = function () {
+                const nombre_equipo = document.getElementById("nombre_equipo").value;
+                const numero_jugadores = document.getElementById("numero_jugadores").value;
+                const nombre_entrenador = document.getElementById("nombre_entrenador").value;
+                const correo_entrenador = document.getElementById("correo_entrenador").value;
+                const telefono_contacto = document.getElementById("telefono_contacto").value;
+                const categoria_equipo = document.getElementById("categoria_equipo").value;
 
                 push(
-                    ref(database, 'septimo'),
+                    ref(database, 'Inscripción_2'),
                     {
-                        name: nombre,
-                        age: edad
+                        nombre_equipo: nombre_equipo,
+                        numero_jugadores: numero_jugadores,
+                        nombre_entrenador: nombre_entrenador,
+                        correo_entrenador: correo_entrenador,
+                        telefono_contacto: telefono_contacto,
+                        categoria_equipo: categoria_equipo
                     }
                 );
-
             }
           </script>
     </body>
