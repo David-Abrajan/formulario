@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
     <title>Inscripción de Equipo de Fútbol</title>
     <style>
         body {
@@ -90,22 +89,23 @@
             // TODO: Add SDKs for Firebase products that you want to use
             // https://firebase.google.com/docs/web/setup#available-libraries
 
+
             // Your web app's Firebase configuration
             const firebaseConfig = {
-              apiKey: "AIzaSyA6OPlYOgGz4k-WdUHdjkln1rX_vz6B3Yk",
-              authDomain: "conexion-f8c18.firebaseapp.com",
-              databaseURL: "https://conexion-f8c18-default-rtdb.firebaseio.com",
-              projectId: "conexion-f8c18",
-              storageBucket: "conexion-f8c18.appspot.com",
-              messagingSenderId: "508099397955",
-              appId: "1:508099397955:web:35660a6d32efc99f8787f6"
+              apiKey: "AIzaSyD7QMu56ywsQqDO6yH3btr2ET3uqbbOugk",
+              authDomain: "chinocorp-fa523.firebaseapp.com",
+              databaseURL: "https://chinocorp-fa523-default-rtdb.firebaseio.com",
+              projectId: "chinocorp-fa523",
+              storageBucket: "chinocorp-fa523.appspot.com",
+              messagingSenderId: "222004032202",
+              appId: "1:222004032202:web:81b0664045cd39e097fa33"
             };
 
             // Initialize Firebase
             const app = initializeApp(firebaseConfig);
             const database = getDatabase(app);
 
-            window.crearRegistro = function () {
+            window.crearInscripcion = function () {
                 const nombre_equipo = document.getElementById("nombre_equipo").value;
                 const numero_jugadores = document.getElementById("numero_jugadores").value;
                 const nombre_entrenador = document.getElementById("nombre_entrenador").value;
