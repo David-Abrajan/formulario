@@ -1,125 +1,151 @@
 <html>
-    <head>
-      <title>Formulario</title>
-      <style>
-      body {
-           font-family: Arial, sans-serif;
-           margin: 0;
-           padding: 0;
-           background: url('https://concepto.de/wp-content/uploads/2015/02/futbol-3-e1550784028870.jpg') center center fixed;
-           background-size: cover;
-       }
+<head>
+  <title>Formulario</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <br>
+  <h2>Inscripción de un Equipo de Fútbol</h2>
+  <form id="formulario">
+    <input type="hidden" id="automatic_id" value="">
+    <label for="nombre_equipo">Nombre del Equipo:</label>
+    <input type="text" id="nombre_equipo" required>
 
-       form {
-           max-width: 600px;
-           margin: 0 auto;
-           background: rgba(255, 255, 255, 0.8);
-           padding: 20px;
-           border-radius: 8px;
-           box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-       }
+    <label for="numero_jugadores">Número Total de Jugadores:</label>
+    <input type="number" id="numero_jugadores" required>
 
-       label {
-           display: block;
-           margin-bottom: 8px;
-       }
+    <label for="nombre_entrenador">Nombre del Entrenador:</label>
+    <input type="text" id="nombre_entrenador" required>
 
-       input, select {
-           width: 100%;
-           padding: 8px;
-           margin-bottom: 16px;
-           box-sizing: border-box;
-       }
+    <label for="correo_entrenador">Correo del Entrenador:</label>
+    <input type="email" id="correo_entrenador" required>
 
-       button {
-           background-color: #4CAF50;
-           color: white;
-           padding: 10px 15px;
-           border: none;
-           border-radius: 4px;
-           cursor: pointer;
-           font-size: 16px;
-       }
+    <label for="telefono_contacto">Teléfono de Contacto:</label>
+    <input type="number" id="telefono_contacto" required>
 
-       button:hover {
-           background-color: #45a049;
-       }
+    <label for="categoria_equipo">Categoría del Equipo:</label>
+    <select id="categoria_equipo" name="categoria_equipo" required>
+      <option value="juvenil">Juvenil</option>
+      <option value="adulto">Adulto</option>
+      <option value="femenino">Femenino</option>
+    </select>
 
-      h2 {
-          color: white;
-          text-align: center;
+    <button type="button" onclick="crearInscripcion()">Enviar</button>
+  </form>
+
+  <h2>Tabla de Equipos Inscritos</h2>
+  <table id="tablaInscripciones">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre del Equipo</th>
+        <th>Número Total de Jugadores</th>
+        <th>Nombre del Entrenador</th>
+        <th>Correo del Entrenador</th>
+        <th>Teléfono de Contacto</th>
+        <th>Categoría del Equipo</th>
+        <th>Eliminar</th>
+        <th>Actualizar</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6OPlYOgGz4k-WdUHdjkln1rX_vz6B3Yk",
+      authDomain: "conexion-f8c18.firebaseapp.com",
+      databaseURL: "https://conexion-f8c18-default-rtdb.firebaseio.com",
+      projectId: "conexion-f8c18",
+      storageBucket: "conexion-f8c18.appspot.com",
+      messagingSenderId: "508099397955",
+      appId: "1:508099397955:web:35660a6d32efc99f8787f6"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    function displayData(snapshot) {
+      const tableBody = document.querySelector("#tablaInscripciones tbody");
+      tableBody.innerHTML = "";
+
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${childSnapshot.key}</td>
+          <td>${data.nombre_equipo}</td>
+          <td>${data.numero_jugadores}</td>
+          <td>${data.nombre_entrenador}</td>
+          <td>${data.correo_entrenador}</td>
+          <td>${data.telefono_contacto}</td>
+          <td>${data.categoria_equipo}</td>
+          <td><button class="eliminar-button" onclick="eliminarInscripcion('${childSnapshot.key}')">Eliminar</button></td>
+          <td><button class="actualizar-button" onclick="actualizarInscripcion('${childSnapshot.key}', '${data.nombre_equipo}', ${data.numero_jugadores}, '${data.nombre_entrenador}', '${data.correo_entrenador}', ${data.telefono_contacto}, '${data.categoria_equipo}')">Actualizar</button></td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    const inscripcionesRef = ref(database, "Abrajan");
+    onValue(inscripcionesRef, displayData);
+
+    window.crearInscripcion = function () {
+      const automatic_id = document.getElementById("automatic_id").value;
+      const nombre_equipo = document.getElementById("nombre_equipo").value;
+      const numero_jugadores = document.getElementById("numero_jugadores").value;
+      const nombre_entrenador = document.getElementById("nombre_entrenador").value;
+      const correo_entrenador = document.getElementById("correo_entrenador").value;
+      const telefono_contacto = document.getElementById("telefono_contacto").value;
+      const categoria_equipo = document.getElementById("categoria_equipo").value;
+
+      if (automatic_id) {
+        update(ref(database, `Abrajan/${automatic_id}`), {
+          nombre_equipo: nombre_equipo,
+          numero_jugadores: numero_jugadores,
+          nombre_entrenador: nombre_entrenador,
+          correo_entrenador: correo_entrenador,
+          telefono_contacto: telefono_contacto,
+          categoria_equipo: categoria_equipo
+        });
+      } else {
+        push(inscripcionesRef, {
+          nombre_equipo: nombre_equipo,
+          numero_jugadores: numero_jugadores,
+          nombre_entrenador: nombre_entrenador,
+          correo_entrenador: correo_entrenador,
+          telefono_contacto: telefono_contacto,
+          categoria_equipo: categoria_equipo
+        });
       }
-      </style>
-    </head>
-    <body>
-      <h2>Inscripción de un Equipo de Fútbol</h2>
-      <form id="formulario">
-          <label for="nombre_equipo">Nombre del Equipo:</label>
-          <input type="text" id="nombre_equipo" required>
+      document.getElementById("automatic_id").value = "";
+      document.getElementById("nombre_equipo").value = "";
+      document.getElementById("numero_jugadores").value = "";
+      document.getElementById("nombre_entrenador").value = "";
+      document.getElementById("correo_entrenador").value = "";
+      document.getElementById("telefono_contacto").value = "";
+      document.getElementById("categoria_equipo").value = "";
+    }
 
-          <label for="nombre_entrenador">Número Total de Jugadores:</label>
-          <input type="number" id="numero_jugadores" required>
+    window.eliminarInscripcion = function (id) {
+      remove(ref(database, `Abrajan/${id}`));
+    }
 
-          <label for="nombre_entrenador">Nombre del Entrenador:</label>
-          <input type="text" id="nombre_entrenador" required>
-
-          <label for="correo_entrenador">Correo del Entrenador:</label>
-          <input type="email" id="correo_entrenador" required>
-
-          <label for="telefono_contacto">Teléfono de Contacto:</label>
-          <input type="number" id="telefono_contacto" required>
-
-          <label for="categoria_equipo">Categoría del Equipo:</label>
-          <select id="categoria_equipo" name="categoria_equipo" required>
-              <option value="juvenil">Juvenil</option>
-              <option value="adulto">Adulto</option>
-              <option value="femenino">Femenino</option>
-          </select>
-
-          <button type="button" onclick="crearInscripcion()">Enviar Inscripción</button>
-      </form>
-        <script type="module">
-            // Import the functions you need from the SDKs you need
-            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-            import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-            // TODO: Add SDKs for Firebase products that you want to use
-            // https://firebase.google.com/docs/web/setup#available-libraries
-
-            // Your web app's Firebase configuration
-            const firebaseConfig = {
-              apiKey: "AIzaSyA6OPlYOgGz4k-WdUHdjkln1rX_vz6B3Yk",
-              authDomain: "conexion-f8c18.firebaseapp.com",
-              databaseURL: "https://conexion-f8c18-default-rtdb.firebaseio.com",
-              projectId: "conexion-f8c18",
-              storageBucket: "conexion-f8c18.appspot.com",
-              messagingSenderId: "508099397955",
-              appId: "1:508099397955:web:35660a6d32efc99f8787f6"
-            };
-
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const database = getDatabase(app);
-
-            window.crearInscripcion = function () {
-                const nombre_equipo = document.getElementById("nombre_equipo").value;
-                const numero_jugadores = document.getElementById("numero_jugadores").value;
-                const nombre_entrenador = document.getElementById("nombre_entrenador").value;
-                const correo_entrenador = document.getElementById("correo_entrenador").value;
-                const telefono_contacto = document.getElementById("telefono_contacto").value;
-                const categoria_equipo = document.getElementById("categoria_equipo").value;
-
-                push(
-                    ref(database, 'Inscripción_2'),
-                    {
-                        nombre_equipo: nombre_equipo,
-                        numero_jugadores: numero_jugadores,
-                        nombre_entrenador: nombre_entrenador,
-                        correo_entrenador: correo_entrenador,
-                        telefono_contacto: telefono_contacto,
-                        categoria_equipo: categoria_equipo
-                    }
-                );
-            }
-          </script>
-    </body>
+    window.actualizarInscripcion = function (id, nombre_equipo, numero_jugadores, nombre_entrenador, correo_entrenador, telefono_contacto, categoria_equipo) {
+      document.getElementById("automatic_id").value = id;
+      document.getElementById("nombre_equipo").value = nombre_equipo;
+      document.getElementById("numero_jugadores").value = numero_jugadores;
+      document.getElementById("nombre_entrenador").value = nombre_entrenador;
+      document.getElementById("correo_entrenador").value = correo_entrenador;
+      document.getElementById("telefono_contacto").value = telefono_contacto;
+      document.getElementById("categoria_equipo").value = categoria_equipo;
+    }
+  </script>
+</body>
 </html>
